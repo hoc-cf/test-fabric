@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Fabric</title>
+  <script src="https://unpkg.com/fabric@5.3.0/dist/fabric.min.js"></script>
+</head>
+<body>
+<div class="block">
+  <h2>Pinch Zoom</h2>
+  <canvas id="c1" width="600" height="400"></canvas>
+  <script>
+    (function(){
+      var canvas = new fabric.Canvas('c1');
+      canvas.add(new fabric.Circle({ radius: 30, fill: '#f55', top: 100, left: 100 }));
+
+      canvas.selectionColor = 'rgba(0,255,0,0.3)';
+      canvas.selectionBorderColor = 'red';
+      canvas.selectionLineWidth = 5;
+      canvas.backgroundColor = '#e0e0e0';
+      canvas.renderAll();
+    })();
+  </script>
+</div>
+</body>
+</html>
