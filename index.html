@@ -4,15 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Test Fabric</title>
+  <style>
+    .console {
+      height: 300px;
+      overflow: auto;
+    }
+  </style>
   <script src="https://unpkg.com/fabric@5.3.0/dist/fabric.min.js"></script>
+  <script>
+    function createLogger(selector) {
+      const con = document.querySelector(selector);
+
+      const info = (message) => {
+        con.innerText = new Date().toLocaleTimeString() + " " + message + "\n" + con.innerText;
+      };
+
+      return {
+        info,
+      };
+    }
+  </script>
 </head>
 <body>
 <div class="block">
   <h2>Pinch Zoom</h2>
   <canvas id="c1" width="600" height="400"></canvas>
+  <div id="c1-console" class="console"></div>
   <script>
     (function(){
-      var canvas = new fabric.Canvas('c1');
+      const logger1 = createLogger("#c1-console");
+      const canvas = new fabric.Canvas('c1');
+
       canvas.add(new fabric.Circle({ radius: 30, fill: '#f55', top: 100, left: 100 }));
 
       canvas.selectionColor = 'rgba(0,255,0,0.3)';
@@ -20,6 +42,26 @@
       canvas.selectionLineWidth = 5;
       canvas.backgroundColor = '#e0e0e0';
       canvas.renderAll();
+
+      canvas.on("mouse:wheel", function(opt) {
+        logger1.info("On mouse:wheel");
+        logger1.info("opt.e.ctrlKey = " + opt.e.ctrlKey);
+        opt.e.preventDefault()
+        opt.e.stopPropagation()
+        if (opt.e.ctrlKey) {
+          var delta = opt.e.deltaY;
+          var zoom = canvas.getZoom();
+          zoom *= 0.999 ** delta;
+          canvas.setZoom(zoom);
+        } else {
+          var e = opt.e;
+          var vpt = canvas.viewportTransform;
+          vpt[4] += e.deltaX;
+          vpt[5] += e.deltaY;
+          canvas.requestRenderAll();
+        }
+      });
+
     })();
   </script>
 </div>
